@@ -171,8 +171,12 @@
     if (control) control.removeEventListener('click', noteForwarded, { capture: true });
   }
 
+  let pressedAt = null;          // where the current press started
+
   window.addEventListener('pointerdown', e => {
-    if (!held || !e.isTrusted) return;
+    if (!e.isTrusted) return;
+    pressedAt = { x: e.clientX, y: e.clientY };
+    if (!held) return;
     const sameSpot = e.button === 0 && Math.hypot(e.clientX - held.x, e.clientY - held.y) <= SAME_SPOT_PX;
     if (!sameSpot) {
       release();
@@ -207,8 +211,9 @@
     const target = e.composedPath()[0];
     if (isEditable(target)) return;
     if (mode !== 'click' && !settings.clickableText) return;
-    const sel = window.getSelection();
-    if (sel && !sel.isCollapsed) return; // the user was selecting text
+    // A press that moved before its release was selecting text, not clicking. An existing
+    // selection says nothing: the word of the last lookup usually still is one.
+    if (pressedAt && Math.hypot(e.clientX - pressedAt.x, e.clientY - pressedAt.y) > SAME_SPOT_PX) return;
     const hit = uwWordAt(e.clientX, e.clientY);
     if (!hit) return;
     if (isClickable(target) || isClickable(hit.element)) {

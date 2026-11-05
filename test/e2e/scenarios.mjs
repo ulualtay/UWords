@@ -145,6 +145,16 @@ export const SCENARIOS = [
     await sleep(AFTER_HOLD_MS);
     assert.equal(await pathname(d), '/words.html');
   }],
+  ['link: double-click works right after another lookup', async ({ d, site }) => {
+    await d.open(WORDS(site));
+    // That lookup leaves its word selected, which must not change how the link behaves.
+    await doubleClickWord(d, 'plain', 'serendipity');
+    await d.key('Escape');
+    await expectNoPanel(d, 200);
+    await doubleClickWord(d, 'link', 'rainbow');
+    await sleep(AFTER_HOLD_MS);
+    assert.equal(await pathname(d), '/words.html');
+  }],
   ['link: a single click still follows it', async ({ d, site }) => {
     await d.open(WORDS(site));
     await d.click(await locate(d, 'link'));
@@ -297,6 +307,17 @@ export const SCENARIOS = [
       await d.click(await locate(d, 'link'));
       await waitFor(async () => (await pathname(d)) === '/link-target.html', 'the link to be followed');
     });
+  }],
+  ['dragging across clickable text selects it and does not click', async ({ d, site }) => {
+    await d.open(WORDS(site));
+    const start = await locate(d, 'link', 0.1);
+    const end = await locate(d, 'link', 0.9);
+    await d.move(start);
+    await d.press(start);
+    await d.move(end);
+    await d.release(end);
+    await sleep(AFTER_HOLD_MS);
+    await expectNoPanel(d, 0);
   }],
   ['setting: Alt+click trigger', async ({ d, site }) => {
     await withSettings(d, { trigger: 'alt-click' }, async () => {
