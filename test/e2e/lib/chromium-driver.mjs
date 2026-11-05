@@ -76,8 +76,22 @@ export async function createChromiumDriver({ extensionDir, headful = false, offl
     return evaluate(browser, session, 'location.href');
   }
 
+  const isOurWorker = t => t.type === 'service_worker' && t.url.startsWith(extensionOrigin);
+
+  // The browser stops an idle worker. Any message from an extension page starts it again.
+  async function wakeServiceWorker() {
+    const { targetInfos } = await browser.send('Target.getTargets');
+    if (targetInfos.some(isOurWorker)) return;
+    const { targetId: pageId } = await browser.send('Target.createTarget', { url: `${extensionOrigin}popup/popup.html`, background: true });
+    const page = await attachToTarget(browser, pageId);
+    await sleep(300);
+    await evaluate(browser, page, "chrome.runtime.sendMessage({ type: 'native-pdf', url: '' })").catch(() => {});
+    await browser.send('Target.closeTarget', { targetId: pageId });
+  }
+
   async function serviceWorkerSession() {
-    const target = await waitForTarget(browser, t => t.type === 'service_worker' && t.url.startsWith(extensionOrigin));
+    await wakeServiceWorker();
+    const target = await waitForTarget(browser, isOurWorker);
     const worker = await attachToTarget(browser, target.targetId);
     // A worker that has just started may not have its extension APIs yet.
     for (let attempt = 0; attempt < 50; attempt++) {
@@ -241,14 +255,23 @@ export async function createChromiumDriver({ extensionDir, headful = false, offl
 
     // Flips "Allow access to file URLs" the way the extensions page does. The extension
     // reloads, which closes tabs showing its pages, so the test tab leaves them first.
+    // Chrome disables an unpacked extension that reloads outside developer mode.
     async allowFileAccess(allowed) {
       await driver.open('about:blank');
       const { targetId: pageId } = await browser.send('Target.createTarget', { url: 'chrome://extensions/' });
       const page = await attachToTarget(browser, pageId);
       await sleep(800);
+      await evaluate(browser, page, 'chrome.developerPrivate.updateProfileConfiguration({ inDeveloperMode: true })');
       await evaluate(browser, page, `chrome.developerPrivate.updateExtensionConfiguration({ extensionId: ${JSON.stringify(id)}, fileAccess: ${allowed} })`);
       await browser.send('Target.closeTarget', { targetId: pageId });
-      await sleep(800); // the setting reloads the extension
+      await sleep(800); // the reload
+      const worker = await serviceWorkerSession();
+      const actual = await evaluate(browser, worker, 'chrome.extension.isAllowedFileSchemeAccess()');
+      if (actual !== allowed) throw new Error(`File access is ${actual} after setting it to ${allowed}`);
+    },
+
+    async version() {
+      return (await browser.send('Browser.getVersion')).product;
     },
 
     close: () => browser.close(),

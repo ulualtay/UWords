@@ -108,8 +108,8 @@ export const SCENARIOS = [
   // ---------- ordinary text ----------
   ['plain text', async ({ d, site }) => {
     await d.open(WORDS(site));
-    const { point, panel } = await doubleClickWord(d, 'plain', 'serendipity');
-    assert.ok(panel.styled, 'panel styles should load');
+    const { point } = await doubleClickWord(d, 'plain', 'serendipity');
+    await waitFor(async () => (await d.panel()).styled, 'the panel styles to load');
     await expectOnTop(d, point);
   }],
   ['Esc closes the panel', async ({ d, site }) => {
@@ -268,8 +268,8 @@ export const SCENARIOS = [
       return { x: Math.round(r.left + r.width / 2), y: Math.round(r.top + r.height / 2) };
     })()`);
     await d.dblclick(point);
-    const panel = await expectPanel(d, 'citadel');
-    assert.ok(panel.styled, 'panel styles should load under CSP');
+    await expectPanel(d, 'citadel');
+    await waitFor(async () => (await d.panel()).styled, 'the panel styles to load under CSP');
     await expectOnTop(d, point);
   }],
   ['frame without a URL (srcdoc)', async ({ d, site }) => {

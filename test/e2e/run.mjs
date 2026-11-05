@@ -60,7 +60,7 @@ for (const editionId of editions) {
   const scenarios = (live ? LIVE_SCENARIOS[editionId] : [...SCENARIOS, ...PARSER_SCENARIOS[editionId]])
     .filter(([name, , opts]) => (!opts || !opts.only || opts.only === browser) && (!only || name.includes(only)));
 
-  console.log(`\n${edition.name} on ${browser}: ${scenarios.length} scenarios`);
+  console.log(`\n${edition.name} on ${await d.version()}: ${scenarios.length} scenarios`);
   const context = { d, edition, site: server.origin, server, localPdf: local.url() };
   try {
     for (const [name, run] of scenarios) {

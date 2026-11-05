@@ -129,7 +129,7 @@ export async function createFirefoxDriver({ extensionDir, geckoId, headful = fal
     socket.send(JSON.stringify({ id, method, params }));
   });
 
-  await send('session.new', { capabilities: { alwaysMatch: { acceptInsecureCerts: true } } });
+  const { capabilities } = await send('session.new', { capabilities: { alwaysMatch: { acceptInsecureCerts: true } } });
   await send('webExtension.install', { extensionData: { type: 'path', path: extensionDir } });
   const extensionOrigin = `moz-extension://${uuid}/`;
 
@@ -250,6 +250,8 @@ export async function createFirefoxDriver({ extensionDir, geckoId, headful = fal
     },
 
     topFrameId: async () => context,
+
+    version: async () => `${capabilities.browserName} ${capabilities.browserVersion}`,
 
     // Firefox never lets extensions read file:// URLs; there is no switch to flip.
     allowFileAccess: async () => {},

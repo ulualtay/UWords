@@ -22,9 +22,12 @@ jobs:
         run: npm run build
       - name: End-to-end tests on Chrome
         run: npm run test:e2e -- --browser chromium
+      # A failure on one browser says nothing about the other: always run both.
       - name: End-to-end tests on Firefox
+        if: success() || failure()
         run: npm run test:e2e -- --browser firefox
       - name: Keep the packages
+        if: success() || failure()
         uses: actions/upload-artifact@v7
         with:
           name: packages
