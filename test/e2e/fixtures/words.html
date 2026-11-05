@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>UWords test page</title>
+<script>
+  // A hostile site: nothing below this listener sees clicks on #hostile.
+  for (const type of ['click', 'dblclick', 'mousedown', 'pointerdown']) {
+    window.addEventListener(type, e => {
+      if (e.target && e.target.id === 'hostile') e.stopImmediatePropagation();
+    }, true);
+  }
+</script>
+<style>
+  body { font: 18px/1.6 sans-serif; margin: 24px; background: #fff; }
+  section { margin: 0 0 18px; }
+  .card { position: relative; width: 420px; padding: 8px; border: 1px solid #ccc; }
+  .overlay { position: absolute; inset: 0; }
+  .pointer { cursor: pointer; display: inline-block; }
+  dialog { width: 520px; height: 200px; }
+</style>
+</head>
+<body>
+<!-- An element named like the API must not clobber it in content scripts. -->
+<div id="browser" hidden></div>
+
+<section>Some <span id="plain">serendipity</span> in plain text, and <input id="field" value="ignored text"> a field.</section>
+<section style="user-select: none">Text nobody can <span id="unselectable">select</span> here.</section>
+<section>A link: <a id="link" href="/link-target.html">rainbow</a> and a new-tab link: <a id="link-blank" href="/link-target.html" target="_blank">horizon</a>.</section>
+<section>
+  <button id="button" onclick="counters.button++">Harvest</button>
+  <button id="button-wrapped" onclick="counters.wrapped++"><span style="pointer-events: none">Lantern</span></button>
+  <form action="/link-target.html" style="display: inline" onsubmit="counters.submit++; return false">
+    <input id="submit" type="submit" value="Confirm order">
+  </form>
+</section>
+<section>
+  <details><summary id="summary">Meadow</summary>Hidden until toggled.</details>
+  <label id="label"><input id="checkbox" type="checkbox"> Orchard</label>
+</section>
+<section>
+  <div id="role-button" role="button" style="display: inline-block" onclick="counters.role++">Compass</div>
+  <div id="pointer" class="pointer">Glacier</div>
+</section>
+<section class="card">
+  <span id="under-overlay">Volcano</span> under an invisible link.
+  <a class="overlay" id="overlay" href="/link-target.html" aria-label="Open"></a>
+</section>
+<section id="hosts">
+  <span id="open-host"></span> and <span id="closed-host"></span>
+</section>
+<section><span id="hostile">Fortress</span> stops every event it can.</section>
+<section><button id="open-dialog" onclick="document.getElementById('dialog').showModal()">Open dialog</button></section>
+<dialog id="dialog">Inside a modal: <span id="in-dialog">Tapestry</span></dialog>
+<div style="height: 1400px"></div>
+
+<script>
+  const counters = { button: 0, wrapped: 0, submit: 0, role: 0, pointer: 0 };
+  document.getElementById('pointer').addEventListener('click', () => counters.pointer++);
+
+  const openRoot = document.getElementById('open-host').attachShadow({ mode: 'open' });
+  openRoot.innerHTML = '<a id="in-open" href="#">Lighthouse</a>';
+  const closedRoot = document.getElementById('closed-host').attachShadow({ mode: 'closed' });
+  closedRoot.innerHTML = '<span id="in-closed">Waterfall</span>';
+
+  // Viewport position of a point inside an element's text (or its box, if it has none),
+  // as a fraction of its size.
+  function locate(id, fx = 0.5, fy = 0.5) {
+    const el = document.getElementById(id) || openRoot.getElementById(id) || closedRoot.getElementById(id);
+    const range = document.createRange();
+    range.selectNodeContents(el);
+    const r = el.textContent.trim() ? range.getBoundingClientRect() : el.getBoundingClientRect();
+    return { x: Math.round(r.left + r.width * fx), y: Math.round(r.top + r.height * fy) };
+  }
+</script>
+</body>
+</html>

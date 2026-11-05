@@ -1,0 +1,17 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Frames</title>
+<body style="margin: 20px; font: 18px sans-serif">
+<p>A big frame without a URL of its own, and a tiny one:</p>
+<iframe id="big" width="700" height="420" srcdoc="<!doctype html><body style='font: 18px sans-serif'><span id=word style='background: #eee'>Almanac</span> in a srcdoc frame</body>"></iframe>
+<iframe id="tiny" width="240" height="60" src="/tiny-frame.html"></iframe>
+<script>
+  // Viewport position of the word inside a frame.
+  function locateIn(frameId) {
+    const frame = document.getElementById(frameId);
+    const word = frame.contentDocument.getElementById('word').getBoundingClientRect();
+    const box = frame.getBoundingClientRect();
+    return { x: Math.round(box.left + frame.clientLeft + word.left + word.width / 2), y: Math.round(box.top + frame.clientTop + word.top + word.height / 2) };
+  }
+</script>
+</body>

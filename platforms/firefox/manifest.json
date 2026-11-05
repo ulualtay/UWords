@@ -1,0 +1,62 @@
+{
+  "manifest_version": 2,
+  "name": "{{EDITION_NAME}}",
+  "version": "{{VERSION}}",
+  "description": "{{EDITION_DESCRIPTION}}",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{{EDITION_GECKO_ID}}",
+      "strict_min_version": "128.0",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
+    }
+  },
+  "icons": {
+    "48": "icons/icon.svg",
+    "96": "icons/icon.svg"
+  },
+  "permissions": [
+    "storage",
+    "contextMenus",
+    "activeTab",
+    "scripting",
+    "webRequest",
+    "webRequestBlocking",
+    "<all_urls>"
+  ],
+  "content_security_policy": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';",
+  "background": {
+    "scripts": [
+      "common/edition.js",
+      "common/settings.js",
+      "background/dom-utils.js",
+      "{{EDITION_BACKGROUND_SCRIPTS}}",
+      "background/lookup.js",
+      "background/core.js",
+      "background/firefox.js"
+    ]
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": [
+        "common/edition.js",
+        "common/settings.js",
+        "content/words.js",
+        "ui/panel.js",
+        "content/content.js",
+        "content/youtube.js"
+      ],
+      "all_frames": true,
+      "match_origin_as_fallback": true,
+      "run_at": "document_start"
+    }
+  ],
+  "browser_action": {
+    "default_title": "{{EDITION_NAME}}",
+    "default_icon": "icons/icon.svg",
+    "default_popup": "popup/popup.html"
+  },
+  "web_accessible_resources": ["ui/panel.css", "pdfjs/web/uwords-viewer.html"]
+}

@@ -1,0 +1,11 @@
+{
+  "packageName": "uwords",
+  "name": "UWords",
+  "description": "Click a word for Cambridge and Merriam-Webster definitions in a small popup. Works on any site, YouTube captions and PDFs.",
+  "geckoId": "uwords@local",
+  "backgroundScripts": [
+    "background/parse-cambridge.js",
+    "background/parse-merriam.js",
+    "background/sources.js"
+  ]
+}

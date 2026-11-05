@@ -1,0 +1,12 @@
+{
+  "packageName": "uwords-tr",
+  "name": "UWords TR",
+  "description": "Click a word for its Turkish meaning from Tureng, Google Translate and Sesli Sözlük. Works on any site, YouTube captions and PDFs.",
+  "geckoId": "uwords-tr@local",
+  "backgroundScripts": [
+    "background/parse-tureng.js",
+    "background/parse-google.js",
+    "background/parse-sesli.js",
+    "background/sources.js"
+  ]
+}

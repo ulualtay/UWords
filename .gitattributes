@@ -14,5 +14,4 @@
 *.zip binary
 
 # Vendored code stays out of GitHub's language statistics and diffs.
-pdfjs/** linguist-vendored
 src/pdfjs/** linguist-vendored

@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>UWords</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header class="bar">
+    <img src="../icons/icon.svg" alt="" width="20" height="20">
+    <span class="title" id="productName">UWords</span>
+    <button type="button" class="btn small" id="openPdf" title="Open a PDF from your computer">Open PDF…</button>
+    <label class="switch" title="Look up words when you click them on pages">
+      <input type="checkbox" id="enabled">
+      <span class="track" aria-hidden="true"></span>
+      <span class="switch-label" id="enabledLabel">On</span>
+    </label>
+  </header>
+
+  <main id="panel"></main>
+
+  <details id="settings">
+    <summary>Settings</summary>
+    <div class="grid">
+      <label for="trigger">Look up on</label>
+      <select id="trigger" data-setting="trigger">
+        <option value="dblclick">Double-click</option>
+        <option value="alt-click">Alt + click</option>
+        <option value="click">Single click</option>
+      </select>
+
+      <label for="defaultTab">Open with tab</label>
+      <select id="defaultTab" data-setting="defaultTab">
+        <option value="last">Last used</option>
+      </select>
+
+      <label for="maxExamples">Examples per meaning</label>
+      <select id="maxExamples" data-setting="maxExamples" data-type="number">
+        <option value="0">None</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="5">5</option>
+      </select>
+
+      <label for="theme">Theme</label>
+      <select id="theme" data-setting="theme">
+        <option value="auto">System</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+      </select>
+    </div>
+    <label class="site">
+      <input type="checkbox" data-setting="clickableText">
+      <span>Double-click also works on links and buttons <span class="hint-inline">(their clicks wait ¼ second for it)</span></span>
+    </label>
+    <label class="site" id="siteRow" hidden>
+      <input type="checkbox" id="siteDisabled">
+      <span>Turn off on <span id="siteName"></span></span>
+    </label>
+
+    <fieldset>
+      <legend>YouTube captions</legend>
+      <label class="check"><input type="checkbox" data-setting="ytCaptions"> Click a caption word to look it up</label>
+      <label class="check"><input type="checkbox" data-setting="ytPauseOnLookup"> Pause the video when a word is clicked</label>
+    </fieldset>
+
+    <fieldset>
+      <legend>PDF</legend>
+      <label class="check"><input type="checkbox" data-setting="pdfViewer"> Open PDFs in the UWords viewer</label>
+    </fieldset>
+
+    <p class="hint">Tip: select a phrase (e.g. “give up”) and right-click to look it up.</p>
+  </details>
+
+  <script src="../common/edition.js"></script>
+  <script src="../common/settings.js"></script>
+  <script src="../ui/panel.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
