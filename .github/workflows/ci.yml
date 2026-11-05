@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - name: Unit tests
+        run: npm test
+      - name: Build all packages
+        run: npm run build
+      - name: End-to-end tests on Chrome
+        run: npm run test:e2e -- --browser chromium
+      - name: End-to-end tests on Firefox
+        run: npm run test:e2e -- --browser firefox
+      - name: Keep the packages
+        uses: actions/upload-artifact@v7
+        with:
+          name: packages
+          path: |
+            dist/*.xpi
+            dist/*.zip
+          retention-days: 30
