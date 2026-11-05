@@ -1,0 +1,18 @@
+# Normalize line endings in the repository; checkouts follow the platform.
+* text=auto
+
+# Binary formats, so git never tries to touch them.
+*.png binary
+*.gif binary
+*.pdf binary
+*.bcmap binary
+*.pfb binary
+*.ttf binary
+*.icc binary
+*.wasm binary
+*.xpi binary
+*.zip binary
+
+# Vendored code stays out of GitHub's language statistics and diffs.
+pdfjs/** linguist-vendored
+src/pdfjs/** linguist-vendored

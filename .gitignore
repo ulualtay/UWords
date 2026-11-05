@@ -1,0 +1,15 @@
+# Build output: packages are attached to GitHub Releases, not committed.
+dist/
+
+# Dependencies and test leftovers
+node_modules/
+test-results/
+
+# Local tool state
+.claude/
+
+# OS and editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
