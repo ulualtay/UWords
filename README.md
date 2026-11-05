@@ -14,7 +14,7 @@ UWords comes in two editions, each for Chromium browsers (Chrome, Edge, Brave, O
 | **UWords** | English definitions | Cambridge Dictionary · Merriam-Webster · MW Simple (Learner's Dictionary) |
 | **UWords TR** | Turkish meanings of English words, and English meanings of Turkish words | Tureng · Google Translate · Sesli Sözlük |
 
-**Status:** version 1.3.0, tested on Microsoft Edge 156 and Zen 1.24 (Firefox-based). It isn't in the browsers' add-on stores yet, so you install it from a package or from source.
+**Status:** version 1.3.0. The automated tests pass on Chrome 156, Firefox 159, Microsoft Edge 156 and Zen 1.24. It isn't in the browsers' add-on stores yet, so you install it from a package or from source.
 
 ## Features
 
@@ -41,7 +41,7 @@ UWords comes in two editions, each for Chromium browsers (Chrome, Edge, Brave, O
 
 ## Install
 
-Build the packages yourself (see [Development](#development)), or download them from [Releases](https://github.com/ulualtay/UWords/releases) if there is one for your version. Each edition has one package per browser family.
+Download the package for your browser from the [latest release](https://github.com/ulualtay/UWords/releases/latest), or build it yourself (see [Development](#development)). Each edition has one package per browser family.
 
 Install one edition per browser profile: with both, a double-click opens two popups. If you want both, set one of them to Alt+click.
 
