@@ -57,4 +57,5 @@ Download the release from the [pdf.js repository](https://github.com/mozilla/pdf
 
 1. Update the version in `package.json` and add a section to `CHANGELOG.md`.
 2. Run all tests, including `--live`, on both browser families.
-3. Tag the commit (`v1.3.0`) and attach the four files from `dist/` to a GitHub release.
+3. Push, and wait for CI to pass on that commit.
+4. Create a GitHub release tagged on that commit (`v1.3.0`), and attach the four files from the `packages` artifact of its CI run. Packages built on Windows would differ in line endings.
